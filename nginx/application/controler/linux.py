@@ -17,6 +17,12 @@ class NginxLinux(Nginx):
             name="Testar Arquivo de Regra",
             args=['sudo', '-S', 'nginx', '-t', '-c', create_file(config)],
         ))
+    
+    def get_rules(self):
+        return self._execute_command(Command(
+            name="Obter Regra de Configuração do Nginx",
+            args=["sudo", "-S", "ls", self.config.get_path_avaliable()]
+        )).stdout
 
     def get_rule(self, name):
         return self._execute_command(Command(

@@ -35,6 +35,10 @@ class Nginx(ABC):
         antes de aplicar alterações. Normalmente utiliza o comando `nginx -t`.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def get_rules(self):
+        raise NotImplementedError
     
     """FUNTIONS RULES"""
 
