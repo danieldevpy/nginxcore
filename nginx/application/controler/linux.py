@@ -22,7 +22,7 @@ class NginxLinux(Nginx):
         return self._execute_command(Command(
             name="Obter Regra de Configuração do Nginx",
             args=["sudo", "-S", "ls", self.config.get_path_avaliable()]
-        )).stdout
+        )).stdout.split('\n')[:-1]
 
     def get_rule(self, name):
         return self._execute_command(Command(
