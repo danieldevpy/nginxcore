@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from core.domain.config import Config
-from core.application.helper.process import ProcessSystem
-from core.domain.command import Command
+from typing import List
+from nginx.application.helper.process import ProcessSystem
+from nginx.domain.config import Config
+from nginx.domain.command import Command
+from nginx.domain.access import LogAccess
 
 @dataclass
 class Nginx(ABC):
@@ -12,14 +14,6 @@ class Nginx(ABC):
     Base class para interagir com os serviços e configurações do Nginx.
     Define uma interface abstrata que deve ser implementada por subclasses específicas.
     """
-    def _execute_command(self, command: Command):
-        try:
-            return ProcessSystem.execute(
-                command=command,
-                password=self.config.password
-            )
-        except Exception as e:
-            raise Exception(f"Erro ao executar comando '{command.name}'. Detalhes: {str(e)}") from e
 
     """FUNCTIONS SERVICE"""
     @abstractmethod
@@ -85,7 +79,7 @@ class Nginx(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def disable_rule(self):
+    def disable_rule(self, name):
         """
         Desativa uma regra no Nginx.
 
@@ -95,7 +89,7 @@ class Nginx(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def check_rule_is_active(self):
+    def check_rule_is_active(self, name):
         """
         Verifica se uma regra específica está ativa no Nginx.
 
@@ -104,7 +98,7 @@ class Nginx(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    def get_rule_log(self):
+    def get_rule_log(self, name) -> List[LogAccess] :
         """
         Recupera os logs relacionados a uma regra no Nginx.
 
@@ -112,3 +106,12 @@ class Nginx(ABC):
         e filtrar as informações relacionadas a uma regra específica.
         """
         raise NotImplementedError
+    
+    def _execute_command(self, command: Command):
+        try:
+            return ProcessSystem.execute(
+                command=command,
+                password=self.config.password
+            )
+        except Exception as e:
+            raise Exception(f"Erro ao executar comando '{command.name}'. Detalhes: {str(e)}") from e

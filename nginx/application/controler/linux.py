@@ -1,6 +1,8 @@
-from core.application.repository.nginx import Nginx
-from core.domain.command import Command
-from core.application.helper.temp import create_file
+from nginx.application.repository.nginx import Nginx
+from nginx.domain.command import Command
+from nginx.application.helper.temp import create_file
+from nginx.application.helper.nginx import get_access
+import os
 
 class NginxLinux(Nginx):
 
@@ -40,13 +42,24 @@ class NginxLinux(Nginx):
             args=["sudo", "-S", "ln", "-s", self.config.get_path_avaliable(name), self.config.get_path_enabled()]
         ))
     
-    def disable_rule(self):
-        pass
+    def disable_rule(self, name):
+        self._execute_command(Command(
+            name="Remover Link Simbólico para Desatuvar Regra no Nginx",
+            args=["sudo", "-S", "rm", "-f", self.config.get_path_enabled(name)]
+        ))
 
-    def check_rule_is_active(self):
-        pass
+    def check_rule_is_active(self, name):
+        return os.path.exists(self.config.get_path_enabled(name))
 
-    def get_rule_log(self):
-        pass
+    def get_rule_log(self, name):
+        path = self.config.get_path_log_access(name)
+        if not os.path.exists(path):
+            raise Exception("Log não encontrado!")
+        cat = self._execute_command(Command(
+            name="Ler Arquivo de LOG",
+            args=["sudo", "-S", "cat", path]
+        )).stdout
+        accesses = [get_access(line) for line in cat.split("\n")]
+        return accesses
 
 

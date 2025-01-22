@@ -16,3 +16,6 @@ class Config:
         if rule:
             return f"{self.path_nginx}/sites-enabled/{rule}"
         return f"{self.path_nginx}/sites-enabled/"
+    
+    def get_path_log_access(self, rule: str):
+        return f"{self.path_log}/{rule}_access.log"

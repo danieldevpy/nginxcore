@@ -1,6 +1,6 @@
 import subprocess
 import platform
-from core.domain.command import Command
+from nginx.domain.command import Command
 
 
 class ProcessSystem:
