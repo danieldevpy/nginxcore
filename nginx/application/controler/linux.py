@@ -54,10 +54,10 @@ class NginxLinux(Nginx):
             args=["sudo", "-S", "rm", "-f", self.config.get_path_enabled(name)]
         ))
 
-    def check_rule_is_active(self, name):
+    def is_rule_active(self, name):
         return os.path.exists(self.config.get_path_enabled(name))
 
-    def get_rule_log(self, name):
+    def get_rule_logs(self, name):
         path = self.config.get_path_log_access(name)
         if not os.path.exists(path):
             raise Exception("Log não encontrado!")
@@ -67,5 +67,14 @@ class NginxLinux(Nginx):
         )).stdout
         accesses = [get_access(line) for line in cat.split("\n")]
         return accesses
+
+    def check_rule_certificate(self, name):
+        log = self.get_rule_log(name)
+        if 'ssl' in log:
+            return True
+        return False
+
+    def activate_rule_certificate(self, name):
+        pass
 
 

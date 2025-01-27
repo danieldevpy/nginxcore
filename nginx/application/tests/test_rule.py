@@ -32,9 +32,9 @@ def test_rule_config():
     config = make_embbed_config(config_rule)
     nginx.test_rule_configuration(config)
 
-def test_get_rule_log():
+def test_get_rule_logs():
     _make_file_log_(name_rule)
-    assert len(nginx.get_rule_log(name_rule)) == 11
+    assert len(nginx.get_rule_logs(name_rule)) == 11
 
 
 def _make_file_log_(name):

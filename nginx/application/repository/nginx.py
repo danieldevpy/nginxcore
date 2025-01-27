@@ -83,7 +83,7 @@ class Nginx(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def disable_rule(self, name):
+    def disable_rule(self, name: str):
         """
         Desativa uma regra no Nginx.
 
@@ -93,16 +93,16 @@ class Nginx(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def check_rule_is_active(self, name):
+    def is_rule_active(self, name: str):
         """
-        Verifica se uma regra específica está ativa no Nginx.
+        Checks if a specific rule is active in Nginx.
 
-        Deve buscar a configuração atual e determinar se a regra está em vigor.
+        Must query the current configuration and determine whether the rule is in effect.
         """
         raise NotImplementedError
     
     @abstractmethod
-    def get_rule_log(self, name) -> List[LogAccess] :
+    def get_rule_logs(self, name: str) -> List[LogAccess] :
         """
         Recupera os logs relacionados a uma regra no Nginx.
 
@@ -111,6 +111,24 @@ class Nginx(ABC):
         """
         raise NotImplementedError
     
+    @abstractmethod
+    def check_rule_certificate(self, name: str) -> bool:
+        """
+        Checks whether the rule has an associated SSL certificate.
+
+        Must verify if the rule uses a valid SSL certificate.
+        """
+        raise NotImplementedError
+    
+    @abstractmethod
+    def activate_rule_certificate(self, name: str):
+        """
+        Activates the SSL certificate for a rule.
+
+        Should apply the certificate to the rule, ensuring secure connections.
+        """
+        raise NotImplementedError
+
     def _execute_command(self, command: Command):
         try:
             return ProcessSystem.execute(
